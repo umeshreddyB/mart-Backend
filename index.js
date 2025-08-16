@@ -1,6 +1,5 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken'
 
@@ -29,9 +28,9 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);})
 
 const userSchem= new mongoose.Schema({
-  name : string,
-  email : string,
-  place : string
+  name : String,
+  email : String,
+  place : String
 })
 const usern= mongoose.model("User",userSchem);
 
