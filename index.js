@@ -56,9 +56,9 @@ app.post("/login", async(req,res)=>{
 app.post("/register",async(req,res)=>{
 
     const {username,email,place,password}=req.body;
-    const result = await usern.find({username,password})
-      if(result.length>0){
-        res.status(200).send("user already register")
+    const existingUser = await usern.findOne({ $or: [{ username }, { email }] });    
+      if(existingUser){
+        res.status(400).send("user already register")
       }
       else{
         const newuser = new usern({username,email,place,password})
