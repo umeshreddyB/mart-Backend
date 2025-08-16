@@ -30,13 +30,14 @@ app.listen(PORT, () => {
 const userSchem= new mongoose.Schema({
   name : String,
   email : String,
-  place : String
+  place : String,
+  password: Number
 })
 const usern= mongoose.model("User",userSchem);
 
 app.post("/login", async(req,res)=>{
-    const {username,email}=req.body;
-    const result = await usern.find({username,email})
+    const {username,password}=req.body;
+    const result = await usern.find({username,password})
     if(result.length>0){
         const payload={
           username,
@@ -54,13 +55,13 @@ app.post("/login", async(req,res)=>{
 
 app.post("/register",async(req,res)=>{
 
-    const {username,email,place}=req.body;
-    const result = await usern.find({username,email})
+    const {username,email,place,password}=req.body;
+    const result = await usern.find({username,password})
       if(result.length>0){
         res.status(500).send("user already register")
       }
       else{
-        const newuser = new usern({name,email,place})
+        const newuser = new usern({username,email,place,password})
         newuser.save();
           const payload={
               username,
