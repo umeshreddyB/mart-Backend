@@ -28,7 +28,7 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);})
 
 const userSchem= new mongoose.Schema({
-  name : String,
+  username : String,
   email : String,
   place : String,
   password: Number
@@ -38,10 +38,11 @@ const usern= mongoose.model("User",userSchem);
 app.post("/login", async(req,res)=>{
     const {username,password}=req.body;
     const result = await usern.find({username,password})
+    console.log(result)
     if(result.length>0){
         const payload={
           username,
-          email
+          password
         }
       const token = jwt.sign(payload,"ABC") 
       res.status(200).json({token})
@@ -50,7 +51,15 @@ app.post("/login", async(req,res)=>{
       res.json({"message":"user invaild"})
     }
 })
-
+app.get("/all", async (req, res) => {
+  try {
+    const data = await usern.find(); 
+    res.status(200).json(data);
+  } catch (err) {
+    console.error("Error fetching data:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 
 app.post("/register",async(req,res)=>{
