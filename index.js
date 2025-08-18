@@ -47,7 +47,7 @@ app.post("/login", async(req,res)=>{
       res.status(200).json({token})
     }
     else{
-      res.send("user invaild")
+      res.json({"message":"user invaild"})
     }
 })
 
@@ -58,7 +58,7 @@ app.post("/register",async(req,res)=>{
     const {username,email,place,password}=req.body;
     const existingUser = await usern.findOne({ $or: [{ username }, { email }] });    
       if(existingUser){
-        res.status(400).send("user already register")
+        res.status(400).json({"message":"user already register"})
       }
       else{
         const newuser = new usern({username,email,place,password})
