@@ -33,7 +33,51 @@ const userSchem= new mongoose.Schema({
   place : String,
   password: Number
 })
+
+const productSchema = new mongoose.Schema({
+  id: Number,
+  name: { type: String, required: true },
+  weight: String,
+  price: String,
+  image: String,
+});
+
+const categorySchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  products: [productSchema],  // Array of products
+});
+
+const productsSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  categories: [categorySchema], // Array of categories
+});
+
+const products=mongoose.model("Products", productsSchema);
+
 const usern= mongoose.model("User",userSchem);
+
+app.post("/addproducts",async(req,res)=>{
+  console.log(req.body)
+  try {
+    const newProducts = new products(req.body); // req.body must be your JSON
+    await newProducts.save();
+    res.status(201).json({ message: "Products added successfully!" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+})
+
+app.get("/getProducts",async(req,res)=>{
+
+    try {
+    const data = await products.find(); 
+    res.status(200).json(data);
+  } catch (err) {
+    console.error("Error fetching data:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+
+})
 
 app.post("/login", async(req,res)=>{
     const {username,password}=req.body;
